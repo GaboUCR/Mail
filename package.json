@@ -1,0 +1,19 @@
+{
+  "name": "tick",
+  "version": "1.0.0",
+  "description": "Productivity app",
+  "main": "server.js",
+  "scripts": {
+    "dev_server": "nodemon server.js",
+    "dev_client": "cd client && npm start",
+    "dev": "concurrently \"npm run dev_server\" \"npm run dev_client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabriel Gamboa",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^6.2.2",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.13"
+  }
+}
