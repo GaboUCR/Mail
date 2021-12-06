@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const track = require('./track')
+const userRoute = require('./user')
 
-router.use('/track', track)
+router.use('/user', userRoute)
 module.exports = router

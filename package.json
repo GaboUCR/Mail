@@ -1,5 +1,5 @@
 {
-  "name": "tick",
+  "name": "mail",
   "version": "1.0.0",
   "description": "Productivity app",
   "main": "server.js",
@@ -13,7 +13,9 @@
   "license": "ISC",
   "dependencies": {
     "concurrently": "^6.2.2",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mongoose": "^6.0.14",
     "nodemon": "^2.0.13"
   }
 }
