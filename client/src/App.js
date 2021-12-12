@@ -1,8 +1,8 @@
-import SignUp from "./signUp"
+import {SignUp, MsgCompose} from "./forms"
 
 function App() {
   return (
-    <SignUp />
+    <MsgCompose/>
   );
 }
 

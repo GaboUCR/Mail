@@ -30,7 +30,7 @@ class SignUp extends React.Component {
     body: JSON.stringify({email: this.state.email, password: this.state.password})
     };
 
-    fetch('http://localhost:5000/api/user/signUpUser', requestOptions).then(response => response.json())
+    fetch('/api/user/signUpUser', requestOptions).then(response => response.json())
     .then(data => console.log(data));
     alert("you are registered")
     event.preventDefault();

@@ -2,13 +2,11 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 const msgSchema = Schema({
-  to_id :  [Number],
-  from_id : [Number],
+  to_id : mongoose.ObjectId,
+  from_id : mongoose.ObjectId,
   body : String,
   description : String,
-  date : String,
-  time: String,
-  type : Number
+  date : Number
 })
 
 msgSchema.method({
