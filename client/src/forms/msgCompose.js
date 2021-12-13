@@ -1,9 +1,12 @@
 import {useState} from "react";
 
+
 function MsgCompose(props){
   const[to, setto] = useState("")
   const[body, setbody] = useState("")
   const[description, setdescription] = useState("")
+
+  const MsgForm = {ok:0, user_not_found:1, unknown_error:2}
 
   function descriptionChange(event){
     setdescription(event.target.value);
@@ -24,11 +27,21 @@ function MsgCompose(props){
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({to:to, body:body, description:description})};
 
-    fetch('/api/user/sendMessage', requestOptions).then(response => response.json())
+    fetch('http://localhost:5000/api/user/sendMessage', requestOptions).then(response => response.json())
     .then((data) => {
-        alert(data);
+      console.log(data)
+      switch (data.error) {
+        case MsgForm.ok:
+          alert("Message sent");
+          break;
 
-    });
+        case MsgForm.user_not_found:
+          alert("user "+to+" not found")
+          break;
+
+        default:
+          alert("Unknown error, try again later")
+    }});
   };
 
   return(
