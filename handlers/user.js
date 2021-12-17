@@ -1,5 +1,18 @@
 const models = require('../models')
 
+let createCookie = () => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}[]|,.?1234567890"
+
+  let newCookie = ""
+
+  for (var i=0; i<40; i++){
+    var ran = Math.floor(Math.random() * characters.length)
+    newCookie += characters[ran]
+  }
+  return newCookie;
+
+}
+
 module.exports = {
   getUserFrontpage : async (req, res) => {
     models.Message.getInbox(req.body.id, (error, inbox) => {
@@ -13,6 +26,34 @@ module.exports = {
       res.send(user)
     })
   },
+
+
+
+  logIn: async (req, res) => {
+    let credential = await models.User.findOne({email:req.body.email}, "password").exec()
+    const MsgForm = {ok:0, wrong_credentials:1, unknown_error:2}
+
+    if (credential.password == null){
+      res.json({error:MsgForm.wrong_credentials})
+      res.end()
+      return 0;
+    }
+
+    if (credential.password == req.body.password){
+      const cookie = createCookie()
+      req.app.locals.users.push({id:credential._id, cookie:cookie})
+      res.cookie('LogIn', cookie, {
+        maxAge: 60 * 60 * 1000
+        // httpOnly: true,
+        // secure: true,
+        // sameSite: true
+      })
+      res.json({error:MsgForm.ok})
+      res.end()
+      return 0;
+    }
+  },
+
   sendMessage : async(req, res) => {
     const MsgForm = {ok:0, user_not_found:1, unknown_error:2}
     const MsgType = {read:0, unread:1, sent:2, spam:3}

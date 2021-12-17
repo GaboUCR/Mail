@@ -1,3 +1,5 @@
 import SignUp from "./signUp"
 import MsgCompose from "./msgCompose"
-export {SignUp, MsgCompose};
+import LogIn from "./logIn"
+
+export {SignUp, MsgCompose, LogIn};
