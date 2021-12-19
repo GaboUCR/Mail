@@ -10,31 +10,53 @@ let createCookie = () => {
     newCookie += characters[ran]
   }
   return newCookie;
-
 }
 
-let checkCookie = async (req, res) => {
-  console.log(req.cookies)
-  console.log(req.app.locals.users)
-
-  for (const n of req.app.locals.users) {
-    if (n.cookie === req.cookies.LogIn){
-      let email = await models.User.findById(n.id, "email").exec()
-      res.json({email:email.email, logged:true})
-      res.end()
-      return 0;
-    }
-  }
-  res.json({logged:false})
-  res.end()
-}
+let checkCookie =
 
 module.exports = {
-  // getInbox : async (req, res) => {
-  //   let inbox = await models.User.find(req.body.id).exec()
-  //
-  //
-  // },
+  //There has to be a better way to do this!!!
+  getInbox : async (req, res) => {
+    const MsgType = {read:0, unread:1, sent:2}
+    let msgQuery = await models.User.findById(res.locals.id, "messages").exec()
+    let messagesIds = msgQuery.messages
+    let tinbox = []
+
+    for (const n of messagesIds) {
+      if (n.msg_type === MsgType.sent){
+        continue;
+      }
+      tinbox.push({id:n.msg_id, type:n.msg_type})
+    }
+    let messagesQuery = await models.Message.find({to_id:res.locals.id}).exec()
+    // console.log(messagesQuery)
+    let inbox = []
+    for (const n in messagesQuery){
+      for (const m of tinbox){
+        if (m.id.toString() === messagesQuery[n]._id.toString()){
+          inbox.push({body:messagesQuery[n].body, description:messagesQuery[n].description,
+                      date:messagesQuery[n].date})
+        }
+      }
+    }
+    console.log(inbox)
+    res.end()
+
+  },
+  getSentMessages : async (req, res) => {
+    console.log(res.locals.id)
+    let msgQuery = await models.Message.find({from_id:res.locals.id}).exec()
+    let messages = []
+
+    for (const n in msgQuery){
+      var to = await models.User.findById(msgQuery[n].to_id, "email").exec()
+      messages.push({to:to.email, body:msgQuery[n].body, description:msgQuery[n].description,
+                     date:msgQuery[n].date})
+    }
+
+    console.log(messages)
+
+  },
 
   signUpUser : async (req, res) => {
     models.User.create(req.body,  (error, user) => {
@@ -47,8 +69,24 @@ module.exports = {
     res.clearCookie("LogIn")
     res.end()
   },
-  // if logged responds with the email address
-  islogged : checkCookie,
+
+  checkCookie : async (req, res, next) => {
+
+    for (const n of req.app.locals.users) {
+      if (n.cookie === req.cookies.LogIn){
+        res.locals.id = n.id
+        next()
+        return 0;
+      }
+    }
+    res.json({logged:false})
+    res.end()
+  },
+  islogged : async(req, res) => {
+    let email = await models.User.findById(res.locals.id, "email").exec()
+    res.json({email:email.email, logged:true})
+    res.end()
+  },
 
   logIn: async (req, res) => {
     let credential = await models.User.findOne({email:req.body.email}, "password").exec()

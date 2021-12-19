@@ -20,7 +20,7 @@ function App() {
   },[email]);
 
   let handleLogout = () =>{
-    fetch("http://localhost:5000/api/user/logOut", {method:"GET"})
+    fetch("http://localhost:5000/api/user/inbox", {method:"GET"})
     setEmail("")
   }
 
