@@ -27,6 +27,7 @@ function LogIn (props){
       console.log(data)
       switch (data.error) {
         case MsgForm.ok:
+          props.setEmail(email)
           alert("Success");
           break;
 

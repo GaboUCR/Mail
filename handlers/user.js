@@ -13,12 +13,28 @@ let createCookie = () => {
 
 }
 
+let checkCookie = async (req, res) => {
+  console.log(req.cookies)
+  console.log(req.app.locals.users)
+
+  for (const n of req.app.locals.users) {
+    if (n.cookie === req.cookies.LogIn){
+      let email = await models.User.findById(n.id, "email").exec()
+      res.json({email:email.email, logged:true})
+      res.end()
+      return 0;
+    }
+  }
+  res.json({logged:false})
+  res.end()
+}
+
 module.exports = {
-  getUserFrontpage : async (req, res) => {
-    models.Message.getInbox(req.body.id, (error, inbox) => {
-      if (error) console.log(error)
-      res.send(inbox)
-    })},
+  // getInbox : async (req, res) => {
+  //   let inbox = await models.User.find(req.body.id).exec()
+  //
+  //
+  // },
 
   signUpUser : async (req, res) => {
     models.User.create(req.body,  (error, user) => {
@@ -27,7 +43,12 @@ module.exports = {
     })
   },
 
-
+  logOut: async(req, res) => {
+    res.clearCookie("LogIn")
+    res.end()
+  },
+  // if logged responds with the email address
+  islogged : checkCookie,
 
   logIn: async (req, res) => {
     let credential = await models.User.findOne({email:req.body.email}, "password").exec()
@@ -43,10 +64,10 @@ module.exports = {
       const cookie = createCookie()
       req.app.locals.users.push({id:credential._id, cookie:cookie})
       res.cookie('LogIn', cookie, {
-        maxAge: 60 * 60 * 1000
-        // httpOnly: true,
-        // secure: true,
-        // sameSite: true
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true,
+        secure: true,
+        sameSite: true
       })
       res.json({error:MsgForm.ok})
       res.end()
@@ -56,7 +77,7 @@ module.exports = {
 
   sendMessage : async(req, res) => {
     const MsgForm = {ok:0, user_not_found:1, unknown_error:2}
-    const MsgType = {read:0, unread:1, sent:2, spam:3}
+    const MsgType = {read:0, unread:1, sent:2}
 
     try{
       let to_id = await models.User.findOne({email:req.body.to}, "id").exec()
@@ -77,8 +98,6 @@ module.exports = {
 
       let from_msg_type = await models.User.updateOne({_id:from_id}, {$addToSet: {messages:
                                                       {msg_id:msg._id, msg_type:MsgType.sent}}}, {upsert:true})
-      console.log(from_id)
-      console.log(to_id)
       res.json({error:MsgForm.ok})
       res.end()
 

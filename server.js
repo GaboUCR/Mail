@@ -20,17 +20,14 @@ mongoose.Promise = global.Promise
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
-// app.use(express.static(path.join(__dirname, 'client/build/')))
 
 const routes = require('./routes')
 app.use('/api', routes)
 
-// app.get('/', (req, res) =>{
-//   console.log(req.cookies)
-// })
-// app.get('*', (request, response) => {
-//   response.sendFile(path.join(__dirname, 'client/build/index.html'))
-// })
+app.use(express.static(path.join(__dirname, 'client/build/')))
+app.get('*', (request, response) => {
+  response.sendFile(path.join(__dirname, 'client/build/index.html'))
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

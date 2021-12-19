@@ -9,10 +9,4 @@ const msgSchema = Schema({
   date : Number
 })
 
-msgSchema.method({
-  getInbox : function(id, callback){
-    this.find({to_id:id}, null, null, callback)
-  }
-})
-
 module.exports = mongoose.model('Message', msgSchema)
