@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 
 function App() {
@@ -26,7 +27,21 @@ function App() {
 
   if (email === ""){
     return (
-      <LogIn setEmail={setEmail}/>
+      <Router>
+        <Switch>
+
+        <Redirect exact from="/" to="/logIn" />
+
+          <Route path= "/signUp">
+            <SignUp/>
+          </Route>
+
+          <Route path= "/logIn">
+            <LogIn setEmail={setEmail}/>
+          </Route>
+
+        </Switch>
+      </Router>
     )
   }
   else{

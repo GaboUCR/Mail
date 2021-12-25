@@ -1,5 +1,6 @@
 import {useState} from "react";
-
+import {Link} from "react-router-dom";
+import Welcome from "./welcome"
 
 function LogIn (props){
   const[email, setEmail] = useState("")
@@ -41,24 +42,27 @@ function LogIn (props){
   };
 
   return(
-    <div className="grid justify-items-center">
-      <div className = "my-10">
-        <form onSubmit={handleSubmit} className = "space-y-4 m-6">
+      <div className="grid grid-cols-2 py-40">
+        <Welcome />
 
-        <label className ="font-oxy font-normal text-lg" htmlFor="email">email</label>
+        <form onSubmit={handleSubmit} className = "place-self-center p-6 space-y-4 rounded-lg bg-white">
+
           <div>
-            <input type="text" className="border w-72" id="email" placeholder="email" value={email} onChange={emailChange} />
+            <input type="text" className="border text-lg px-2 h-10 w-72" id="email" placeholder="Enter your email" value={email} onChange={emailChange} />
           </div>
 
-        <label htmlFor="password">Password</label>
           <div>
-            <input type="password" className="border w-72" id="password" value={password} onChange={passwordChange}/>
+            <input type="password" className="border text-lg px-2 h-10 w-72" id="password" placeholder="Password" value={password} onChange={passwordChange}/>
           </div>
 
-        <input type="submit" value="Submit"/>
+          <input className="w-72 h-10 bg-light-brown" type="submit" value="Log In"/>
+
+          <div className="grid w-72 h-10">
+            <Link className="place-self-center" to="/signUp">Create new account</Link>
+          </div>
         </form>
+
       </div>
-    </div>
   )
 
 }

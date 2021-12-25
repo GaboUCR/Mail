@@ -59,10 +59,8 @@ module.exports = {
   },
 
   signUpUser : async (req, res) => {
-    models.User.create(req.body,  (error, user) => {
-      if (error) console.log(error)
-      res.send(user)
-    })
+    let user = await models.User.create(req.body)
+    console.log(user)  
   },
 
   logOut: async(req, res) => {
