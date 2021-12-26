@@ -12,8 +12,6 @@ let createCookie = () => {
   return newCookie;
 }
 
-let checkCookie =
-
 module.exports = {
   //There has to be a better way to do this!!!
   getInbox : async (req, res) => {
@@ -60,7 +58,7 @@ module.exports = {
 
   signUpUser : async (req, res) => {
     let user = await models.User.create(req.body)
-    console.log(user)  
+    console.log(user)
   },
 
   logOut: async(req, res) => {
@@ -89,7 +87,7 @@ module.exports = {
   logIn: async (req, res) => {
     let credential = await models.User.findOne({email:req.body.email}, "password").exec()
     const MsgForm = {ok:0, wrong_credentials:1, unknown_error:2}
-
+    console.log(req)
     if (credential.password == null){
       res.json({error:MsgForm.wrong_credentials})
       res.end()
@@ -99,12 +97,14 @@ module.exports = {
     if (credential.password == req.body.password){
       const cookie = createCookie()
       req.app.locals.users.push({id:credential._id, cookie:cookie})
+      console.log(cookie)
       res.cookie('LogIn', cookie, {
         maxAge: 60 * 60 * 1000,
         httpOnly: true,
-        secure: true,
-        sameSite: true
+        sameSite: true,
+        secure:true
       })
+
       res.json({error:MsgForm.ok})
       res.end()
       return 0;

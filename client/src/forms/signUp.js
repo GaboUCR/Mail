@@ -1,9 +1,11 @@
-import {useState} from "react";
+import {useState, useContext} from "react";
 import {Link} from "react-router-dom";
 import Welcome from "./welcome"
+import {EmailContext} from "../email.context"
 
-function SignUp (props){
-  const[email, setEmail] = useState("")
+function SignUp (){
+  const{email, setEmail} = useContext(EmailContext)
+  const[emailForm, setemailForm] = useState("")
   const[password, setPassword] = useState("")
   const[password1, setPassword1] = useState("")
 
@@ -18,23 +20,24 @@ function SignUp (props){
   }
 
   function emailChange(event){
-    setEmail(event.target.value);
+    setemailForm(event.target.value);
   }
 
   function handleSubmit(event){
     event.preventDefault();
+    console.log(emailForm)
     if (password1 === password){
       const requestOptions = {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email:email, password:password})};
+      body: JSON.stringify({email:emailForm, password:password})};
 
       fetch('http://localhost:5000/api/user/signUp', requestOptions).then(response => response.json())
       .then((data) => {
         console.log(data)
         switch (data.error) {
           case MsgForm.ok:
-            props.setEmail(email)
+            setEmail(emailForm)
             alert("Success");
             break;
 
@@ -57,7 +60,7 @@ function SignUp (props){
         <form onSubmit={handleSubmit} className = "place-self-center p-6 space-y-4 rounded-lg bg-white">
 
           <div>
-            <input type="text" className="border text-lg px-2 h-10 w-72" id="email" placeholder="Enter your email" value={email} onChange={emailChange} />
+            <input type="text" className="border text-lg px-2 h-10 w-72" id="email" placeholder="Enter your email" value={emailForm} onChange={emailChange} />
           </div>
 
           <div>

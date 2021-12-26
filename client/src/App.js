@@ -1,5 +1,7 @@
 import {SignUp, MsgCompose, LogIn} from "./forms"
-import {useEffect, useState} from "react"
+import {useEffect, useState, useContext} from "react"
+import {EmailContext, EmailProvider} from "./email.context"
+import Frontpage from "./frontpage"
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,52 +11,43 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const [email, setEmail] = useState("")
+  const {email, handleEmailChange} = useContext(EmailContext)
 
   useEffect( () => {
     fetch('http://localhost:5000/api/user/check', {method:"GET"}).then(response => response.json())
     .then((data) => {
       if (data.logged){
-        setEmail(data.email)
+        handleEmailChange(data.email)
+      }
+      else{
+        handleEmailChange("")
       }
     })
   },[email]);
 
-  let handleLogout = () =>{
-    fetch("http://localhost:5000/api/user/inbox", {method:"GET"})
-    setEmail("")
-  }
-
   if (email === ""){
     return (
       <Router>
-        <Switch>
+          <Switch>
 
-        <Redirect exact from="/" to="/logIn" />
+            <Redirect exact from="/" to="/logIn" />
 
-          <Route path= "/signUp">
-            <SignUp/>
-          </Route>
+              <Route path= "/signUp">
+                <SignUp/>
+              </Route>
 
-          <Route path= "/logIn">
-            <LogIn setEmail={setEmail}/>
-          </Route>
+              <Route path= "/logIn">
+                <LogIn />
+              </Route>
 
-        </Switch>
+          </Switch>
+
       </Router>
     )
   }
   else{
     return (
-      <nav className = "flex bg-top-nav">
-          <a href = "/" className ="p-4 hover:bg-nav-link text-nav-link-text">Mail</a>
-
-          <nav className="flex absolute right-0">
-
-            <a className="p-4 inline hover:bg-nav-link text-nav-link-text">{email}</a>
-            <button onClick={handleLogout} className="p-4 inline hover:bg-nav-link text-nav-link-text">log out</button>
-          </nav>
-        </nav>
+          <Frontpage />
       )
     }
 }

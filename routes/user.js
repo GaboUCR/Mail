@@ -7,5 +7,5 @@ router.post("/LogIn", userHandlers.logIn)
 router.get("/check", userHandlers.checkCookie, userHandlers.islogged)
 router.get("/inbox", userHandlers.checkCookie, userHandlers.getSentMessages)
 router.get("/sent", userHandlers.checkCookie, userHandlers.getSentMessages)
-router.get("/logOut", userHandlers.logOut)
+router.get("/logout", userHandlers.logOut)
 module.exports = router
