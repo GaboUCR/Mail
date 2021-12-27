@@ -1,5 +1,7 @@
 import {useEffect, useState, useContext} from "react";
 import {EmailContext} from "../email.context"
+import {loupe} from "./images"
+
 
 function Navbar(){
   const {email, handleEmailChange} = useContext(EmailContext)
@@ -11,15 +13,35 @@ function Navbar(){
   }
 
   return(
-    <nav className = "grid grid-cols-3 grid-rows-1 bg-top-nav">
-        <a href = "/" className ="p-4 hover:bg-nav-link text-nav-link-text">Mail</a>
+    <nav id="welcome" className = "text-xl grid grid-cols-3 grid-rows-1 bg-top-nav">
+      <div className ="p-4">
+        <a href = "/">Mail</a>
+      </div>
 
-        <nav className="flex absolute right-0">
+      <div className="flex p-2">
+        <SearchBar />
+      </div>
 
-          <a className="p-4 inline hover:bg-nav-link text-nav-link-text">{email}</a>
-          <button onClick={handleLogout} className="p-4 inline hover:bg-nav-link text-nav-link-text">log out</button>
-        </nav>
+      <nav className="flex absolute right-0">
+
+        <a className="p-4 inline">{email}</a>
+        <button onClick={handleLogout} className="p-4 inline">log out</button>
       </nav>
+    </nav>
+  )
+}
+
+function SearchBar(){
+  const [search, setSearch] = useState("")
+
+  function handleSearch (event){
+    setSearch(event.target.value)
+  }
+
+  return (
+    <div className="">
+      <input type="text" className="border text-lg px-2 h-10 w-72" id="searchBar" placeholder="Find the people you know" value={search} onChange={handleSearch} />
+    </div>
   )
 }
 

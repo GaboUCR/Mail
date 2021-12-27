@@ -19,9 +19,13 @@ function App() {
       if (data.logged){
         handleEmailChange(data.email)
       }
-      else{
-        handleEmailChange("")
-      }
+
+
+
+      //This has to be changed !!!!
+      // else{
+      //   handleEmailChange("")
+      // }
     })
   },[email]);
 
