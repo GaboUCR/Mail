@@ -4,12 +4,12 @@ import Welcome from "./welcome"
 import {EmailContext} from "../email.context"
 
 function SignUp (){
-  const{email, setEmail} = useContext(EmailContext)
+  const{email, handleEmailChange} = useContext(EmailContext)
   const[emailForm, setemailForm] = useState("")
   const[password, setPassword] = useState("")
   const[password1, setPassword1] = useState("")
 
-  const MsgForm = {ok:0, wrong_credentials:1, unknown_error:2}
+  const MsgForm = {ok:0, user_taken:1, unknown_error:2}
 
   function passwordChange(event){
     setPassword(event.target.value);
@@ -37,12 +37,12 @@ function SignUp (){
         console.log(data)
         switch (data.error) {
           case MsgForm.ok:
-            setEmail(emailForm)
+            handleEmailChange(emailForm)
             alert("Success");
             break;
 
-          case MsgForm.wrong_credentials:
-            alert("Password or email address are incorrect")
+          case MsgForm.user_taken:
+            alert("That name is already taken")
             break;
 
           default:

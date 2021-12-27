@@ -57,8 +57,28 @@ module.exports = {
   },
 
   signUpUser : async (req, res) => {
+    let users = await models.User.find({}, "email").exec()
+    const MsgForm = {ok:0, user_taken:1, unknown_error:2}
+
+    for (const n of users){
+      if (n.email == req.body.email){
+        res.json({error:MsgForm.user_taken})
+        res.end()
+        return 0;
+      }
+    }
     let user = await models.User.create(req.body)
-    console.log(user)
+
+    const cookie = createCookie()
+    req.app.locals.users.push({id:user._id, cookie:cookie})
+    res.cookie('LogIn', cookie, {
+      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: true,
+      secure:true
+    })
+    res.json({error:MsgForm.ok})
+    res.end()
   },
 
   logOut: async(req, res) => {
