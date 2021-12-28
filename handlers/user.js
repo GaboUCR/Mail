@@ -31,13 +31,16 @@ module.exports = {
     let inbox = []
     for (const n in messagesQuery){
       for (const m of tinbox){
+
         if (m.id.toString() === messagesQuery[n]._id.toString()){
-          inbox.push({body:messagesQuery[n].body, description:messagesQuery[n].description,
-                      date:messagesQuery[n].date})
+          var from = await models.User.findById(messagesQuery[n].from_id, "email").exec()
+          inbox.push({from:from.email, body:messagesQuery[n].body, description:messagesQuery[n].description,
+                      date:messagesQuery[n].date, id:messagesQuery[n]._id.toString()})
         }
       }
     }
     console.log(inbox)
+    res.json({messages:inbox})
     res.end()
 
   },
@@ -47,13 +50,14 @@ module.exports = {
     let messages = []
 
     for (const n in msgQuery){
+
       var to = await models.User.findById(msgQuery[n].to_id, "email").exec()
       messages.push({to:to.email, body:msgQuery[n].body, description:msgQuery[n].description,
-                     date:msgQuery[n].date})
+                     date:msgQuery[n].date, id:msgQuery[n]._id.toString()})
     }
-
     console.log(messages)
-
+    res.json({messages:messages})
+    res.end()
   },
 
   signUpUser : async (req, res) => {
@@ -138,7 +142,7 @@ module.exports = {
     try{
       let to_id = await models.User.findOne({email:req.body.to}, "id").exec()
             //You have to change this
-      let from_id = await models.User.findOne({email:"gabrielgv14@gmail.com"}, "id").exec()
+      let from_id = res.locals.id
 
       if (to_id == null || from_id == null){
         res.json({error:MsgForm.user_not_found})
@@ -146,8 +150,11 @@ module.exports = {
         return 0;
       }
 
+      let fullDate = new Date(Date.now())
+      let date = (fullDate.getMonth()+1).toString()+"/"+fullDate.getDate().toString()+"/"+fullDate.getFullYear().toString()
+
       let msg = await models.Message.create({to_id:to_id, from_id:from_id, body:req.body.body,
-                                             description:req.body.description, date:Date.now()})
+                                             description:req.body.description, date:date})
 
       let to_msg_type = await models.User.updateOne({_id:to_id}, {$addToSet: {messages:
                                                     {msg_id:msg._id, msg_type:MsgType.unread}}}, {upsert:true})

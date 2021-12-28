@@ -18,9 +18,7 @@ function Navbar(){
         <a href = "/">Mail</a>
       </div>
 
-      <div className="flex p-2">
-        <SearchBar />
-      </div>
+      <SearchBar />
 
       <nav className="flex absolute right-0">
 
@@ -39,7 +37,7 @@ function SearchBar(){
   }
 
   return (
-    <div className="">
+    <div className="p-2">
       <input type="text" className="border text-lg px-2 h-10 w-72" id="searchBar" placeholder="Find the people you know" value={search} onChange={handleSearch} />
     </div>
   )

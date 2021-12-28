@@ -1,10 +1,3 @@
-import Navbar from "./navbar"
-
-function Frontpage(){
-
-  return(
-    <Navbar />
-  )
-}
+import Frontpage from "./frontpage"
 
 export default Frontpage;
