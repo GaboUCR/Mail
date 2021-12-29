@@ -2,7 +2,7 @@ import Navbar from "./navbar"
 import {useState, useEffect} from "react"
 import {refresh} from "./images"
 import {MsgCompose} from "../forms"
-import {MessageTumbnail, Messages} from "./messages"
+import {MessageTumbnail, Messages, Message} from "./messages"
 import {
   BrowserRouter as Router,
   Switch,
@@ -47,7 +47,7 @@ function Frontpage(){
     fetch('http://localhost:5000/api/user/inbox', requestOptions).then(response => response.json())
     .then((r) => {
       console.log(r)
-      setInbox(r.messages.map(m => (<MessageTumbnail id={m.id} name={m.from} description={m.description} body={m.body} date={m.date}/>)))
+      setInbox(r.messages)
     },
     (error) =>{console.log(error)}
     )
@@ -55,7 +55,7 @@ function Frontpage(){
     fetch('http://localhost:5000/api/user/sent', requestOptions).then(response => response.json())
     .then((r) => {
       console.log(r)
-      setSent(r.messages.map(m => (<MessageTumbnail id={m.id} name={m.to} description={m.description} body={m.body} date={m.date}/>)))
+      setSent(r.messages)
     })
   },[]);
 
@@ -73,11 +73,15 @@ function Frontpage(){
         </Route>
 
         <Route path= "/inbox">
-          <Messages messages={inbox}/>
+          <Messages messages={inbox.map(m => (<MessageTumbnail id={m.id} name={m.from} description={m.description} body={m.body} date={m.date}/>))}/>
         </Route>
 
         <Route path= "/sent">
-          <Messages messages={sent}/>
+          <Messages messages={sent.map(m => (<MessageTumbnail id={m.id} name={m.to} description={m.description} body={m.body} date={m.date}/>))}/>
+        </Route>
+
+        <Route exact path="/msg/:msg_id">
+          <Message messages={inbox.concat(sent)}/>
         </Route>
 
       </Switch>

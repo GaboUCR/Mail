@@ -11,7 +11,8 @@ router.post("/LogIn", userHandlers.logIn)
 // router.get("/inbox", userHandlers.checkCookie, userHandlers.getSentMessages)
 // router.get("/sent", userHandlers.checkCookie, userHandlers.getSentMessages)
 function hack(req, res, next){
-  res.locals.id = "61ad8dc34a0e347f088541c1"
+  // res.locals.id = "61ad8dc34a0e347f088541c1"
+  res.locals.id = "61adc8e74a0e347f088541c7"
   next()
 }
 

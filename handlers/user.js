@@ -16,8 +16,9 @@ module.exports = {
   //There has to be a better way to do this!!!
   getInbox : async (req, res) => {
     const MsgType = {read:0, unread:1, sent:2}
-    let msgQuery = await models.User.findById(res.locals.id, "messages").exec()
+    let msgQuery = await models.User.findById(res.locals.id, "messages email").exec()
     let messagesIds = msgQuery.messages
+    let to = msgQuery.email
     let tinbox = []
 
     for (const n of messagesIds) {
@@ -34,7 +35,7 @@ module.exports = {
 
         if (m.id.toString() === messagesQuery[n]._id.toString()){
           var from = await models.User.findById(messagesQuery[n].from_id, "email").exec()
-          inbox.push({from:from.email, body:messagesQuery[n].body, description:messagesQuery[n].description,
+          inbox.push({from:from.email, to:to, body:messagesQuery[n].body, description:messagesQuery[n].description,
                       date:messagesQuery[n].date, id:messagesQuery[n]._id.toString()})
         }
       }
@@ -47,12 +48,13 @@ module.exports = {
   getSentMessages : async (req, res) => {
     console.log(res.locals.id)
     let msgQuery = await models.Message.find({from_id:res.locals.id}).exec()
+    let from = await models.User.findById(res.locals.id, "email")
     let messages = []
 
     for (const n in msgQuery){
 
       var to = await models.User.findById(msgQuery[n].to_id, "email").exec()
-      messages.push({to:to.email, body:msgQuery[n].body, description:msgQuery[n].description,
+      messages.push({to:to.email, from:from.email, body:msgQuery[n].body, description:msgQuery[n].description,
                      date:msgQuery[n].date, id:msgQuery[n]._id.toString()})
     }
     console.log(messages)
