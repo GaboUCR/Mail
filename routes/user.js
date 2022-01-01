@@ -16,11 +16,12 @@ function hack(req, res, next){
   next()
 }
 
+router.post("/markMsgAsRead", hack, userHandlers.markMsgAsRead)
 router.post("/sendMessage", hack, userHandlers.sendMessage)
 router.get("/inbox", hack, userHandlers.getInbox)
 router.get("/sent", hack, userHandlers.getSentMessages)
 
-
+router.post("/get-users", userHandlers.getUsers)
 router.get("/check", userHandlers.checkCookie, userHandlers.islogged)
 router.get("/logout", userHandlers.logOut)
 module.exports = router

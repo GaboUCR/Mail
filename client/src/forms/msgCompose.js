@@ -1,10 +1,23 @@
 import {useState} from "react";
+import {useParams} from "react-router-dom";
 
 
 function MsgCompose(props){
-  const[to, setto] = useState("")
+  let defaultTo = useParams()
+  console.log(defaultTo)
+
+  if (!props.isTo){
+    defaultTo = ""
+  }
+  const[to, setto] = useState(defaultTo.defaultTo)
   const[body, setbody] = useState("")
   const[description, setdescription] = useState("")
+
+  console.log(typeof defaultTo)
+  //
+  // if (props.isTo){
+  //   setto(defaultTo)
+  // }
 
   const MsgForm = {ok:0, user_not_found:1, unknown_error:2}
 

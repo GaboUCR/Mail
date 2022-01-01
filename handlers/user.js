@@ -28,25 +28,24 @@ module.exports = {
       tinbox.push({id:n.msg_id, type:n.msg_type})
     }
     let messagesQuery = await models.Message.find({to_id:res.locals.id}).exec()
-    // console.log(messagesQuery)
     let inbox = []
+
     for (const n in messagesQuery){
       for (const m of tinbox){
 
         if (m.id.toString() === messagesQuery[n]._id.toString()){
           var from = await models.User.findById(messagesQuery[n].from_id, "email").exec()
           inbox.push({from:from.email, to:to, body:messagesQuery[n].body, description:messagesQuery[n].description,
-                      date:messagesQuery[n].date, id:messagesQuery[n]._id.toString()})
+                      date:messagesQuery[n].date, id:messagesQuery[n]._id.toString(), type:m.msg_type})
         }
       }
     }
-    console.log(inbox)
     res.json({messages:inbox})
     res.end()
 
   },
   getSentMessages : async (req, res) => {
-    console.log(res.locals.id)
+    const MsgType = {read:0, unread:1, sent:2}
     let msgQuery = await models.Message.find({from_id:res.locals.id}).exec()
     let from = await models.User.findById(res.locals.id, "email")
     let messages = []
@@ -55,10 +54,30 @@ module.exports = {
 
       var to = await models.User.findById(msgQuery[n].to_id, "email").exec()
       messages.push({to:to.email, from:from.email, body:msgQuery[n].body, description:msgQuery[n].description,
-                     date:msgQuery[n].date, id:msgQuery[n]._id.toString()})
+                     date:msgQuery[n].date, id:msgQuery[n]._id.toString(), type:Msg_Type.sent})
     }
-    console.log(messages)
     res.json({messages:messages})
+    res.end()
+  },
+
+  getUsers: async(req, res) => {
+    let emailsQ = await models.User.find({"email":{$regex: req.body.search, $options:"i" }}, "email").exec()
+    emails = []
+    for (const n in emailsQ){
+      emails.push(emailsQ[n].email)
+    }
+    res.json({emails:emails})
+    res.end()
+  },
+
+  markMsgAsRead: async(req, res) =>{
+    const MsgType = {read:0, unread:1, sent:2}
+    let msgStatus = await models.User.update({id:res.locals.id, "messages.msg_id":req.body.msg_id}, {
+      $set:{'messages.$.msg_type' : MsgType.read}
+    })
+
+    console.log(msgStatus)
+    res.json(msgStatus)
     res.end()
   },
 
@@ -113,7 +132,7 @@ module.exports = {
   logIn: async (req, res) => {
     let credential = await models.User.findOne({email:req.body.email}, "password").exec()
     const MsgForm = {ok:0, wrong_credentials:1, unknown_error:2}
-    console.log(req)
+
     if (credential.password == null){
       res.json({error:MsgForm.wrong_credentials})
       res.end()
@@ -123,7 +142,7 @@ module.exports = {
     if (credential.password == req.body.password){
       const cookie = createCookie()
       req.app.locals.users.push({id:credential._id, cookie:cookie})
-      console.log(cookie)
+
       res.cookie('LogIn', cookie, {
         maxAge: 60 * 60 * 1000,
         httpOnly: true,

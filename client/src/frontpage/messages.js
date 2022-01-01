@@ -1,10 +1,15 @@
 import {Link, useParams} from "react-router-dom";
+import {useState} from "react"
 
 export function MessageTumbnail(props){
 
+  const [selected, setSelected] = useState("")
+  const MsgType = {read:0, unread:1, sent:2}
+
+
   let description = <b>props.description</b>
   return(
-    <div className="flex overflow-hidden p-3 space-x-4">
+    <div className={"flex overflow-hidden p-3 space-x-4"}>
 
       <input className="self-center w-1/30" type="checkbox"/>
 
@@ -39,8 +44,18 @@ export function Message(props){
   let {msg_id} = useParams()
   let msg = getMessageById(props.messages, msg_id)
 
+  const requestOptions = {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({msg_id:msg_id})};
+
+  fetch('http://localhost:5000/api/user/markMsgAsRead', requestOptions).then(response => response.json())
+  .then((r) => {
+    console.log(r)
+  })
+
   if (msg === null){
-    return <h2 className="text-center">Unexpected error, try again later</h2>
+    return <h2 className="text-center font-oxy font-black text-lg md:text-3xl">Unexpected error, try again later</h2>
 
   }
   console.log(msg)
