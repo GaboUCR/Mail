@@ -51,8 +51,8 @@ function App() {
   }
   else{
     return (
-          <Frontpage />
-      )
+            <Frontpage />
+       )
     }
 }
 

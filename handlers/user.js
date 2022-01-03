@@ -32,14 +32,14 @@ module.exports = {
 
     for (const n in messagesQuery){
       for (const m of tinbox){
-
         if (m.id.toString() === messagesQuery[n]._id.toString()){
           var from = await models.User.findById(messagesQuery[n].from_id, "email").exec()
           inbox.push({from:from.email, to:to, body:messagesQuery[n].body, description:messagesQuery[n].description,
-                      date:messagesQuery[n].date, id:messagesQuery[n]._id.toString(), type:m.msg_type})
+                      date:messagesQuery[n].date, id:messagesQuery[n]._id.toString(), type:m.type})
         }
       }
     }
+    console.log(inbox)
     res.json({messages:inbox})
     res.end()
 
@@ -54,8 +54,9 @@ module.exports = {
 
       var to = await models.User.findById(msgQuery[n].to_id, "email").exec()
       messages.push({to:to.email, from:from.email, body:msgQuery[n].body, description:msgQuery[n].description,
-                     date:msgQuery[n].date, id:msgQuery[n]._id.toString(), type:Msg_Type.sent})
+                     date:msgQuery[n].date, id:msgQuery[n]._id.toString(), type:MsgType.sent})
     }
+    console.log(messages)
     res.json({messages:messages})
     res.end()
   },
@@ -76,8 +77,7 @@ module.exports = {
       $set:{'messages.$.msg_type' : MsgType.read}
     })
 
-    console.log(msgStatus)
-    res.json(msgStatus)
+    res.json({ok:msgStatus.acknowledged})
     res.end()
   },
 

@@ -1,5 +1,5 @@
 import Navbar from "./navbar"
-import {useState, useEffect} from "react"
+import {useState, useEffect, useContext} from "react"
 import {refresh, send} from "./images"
 import {MsgCompose} from "../forms"
 import {MessageTumbnail, Messages, Message} from "./messages"
@@ -49,13 +49,13 @@ function Frontpage(){
   const [pressed, setPressed] = useState(false)
   const [inbox, setInbox] = useState([])
   const [sent, setSent] = useState([])
+  const MsgType = {read:0, unread:1, sent:2}
 
   useEffect(()=>{
     const requestOptions = {method: 'GET'};
 
     fetch('http://localhost:5000/api/user/inbox', requestOptions).then(response => response.json())
     .then((r) => {
-      console.log(r)
       setInbox(r.messages)
     },
     (error) =>{console.log(error)}
@@ -63,11 +63,9 @@ function Frontpage(){
 
     fetch('http://localhost:5000/api/user/sent', requestOptions).then(response => response.json())
     .then((r) => {
-      console.log(r)
       setSent(r.messages)
     })
   },[]);
-
 
   return(
     <Router>
@@ -79,11 +77,11 @@ function Frontpage(){
       <Switch>
 
         <Route exact path= "/inbox">
-          <Messages messages={inbox.map(m => (<MessageTumbnail read={m.type} id={m.id} name={m.from} description={m.description} body={m.body} date={m.date}/>))}/>
+          <Messages messages={inbox.map(m => (<MessageTumbnail msg_type={m.type} id={m.id} name={m.from} description={m.description} body={m.body} date={m.date}/>))}/>
         </Route>
 
         <Route exact path= "/sent">
-          <Messages messages={sent.map(m => (<MessageTumbnail id={m.id} name={m.to} description={m.description} body={m.body} date={m.date}/>))}/>
+          <Messages messages={sent.map(m => (<MessageTumbnail msg_type={m.type} id={m.id} name={m.from} description={m.description} body={m.body} date={m.date}/>))}/>
         </Route>
 
         <Route exact path="/msg/:msg_id">

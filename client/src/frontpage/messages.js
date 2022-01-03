@@ -1,15 +1,19 @@
 import {Link, useParams} from "react-router-dom";
-import {useState} from "react"
+import {useState, useEffect} from "react"
 
 export function MessageTumbnail(props){
 
   const [selected, setSelected] = useState("")
+
+  let read = ""
   const MsgType = {read:0, unread:1, sent:2}
 
+  if (props.msg_type === MsgType.read){
+    read = " bg-white"
+  }
 
-  let description = <b>props.description</b>
   return(
-    <div className={"flex overflow-hidden p-3 space-x-4"}>
+    <div className={"flex overflow-hidden p-3 space-x-4"+read}>
 
       <input className="self-center w-1/30" type="checkbox"/>
 
@@ -32,33 +36,59 @@ export function MessageTumbnail(props){
 };
 
 function getMessageById(messages, id){
-    for (const n of messages){
-      if(n.id === id){
-        return n;
-      }
+
+  for (const n of messages){
+    if(n.id === id){
+      return n;
     }
-    return null;
+  }
+  return null;
 }
 
 export function Message(props){
+  const MsgType = {read:0, unread:1, sent:2}
   let {msg_id} = useParams()
   let msg = getMessageById(props.messages, msg_id)
 
-  const requestOptions = {
-  method: 'POST',
-  headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify({msg_id:msg_id})};
+  useEffect(() => {
+    const requestOptions = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({msg_id:msg_id})};
 
-  fetch('http://localhost:5000/api/user/markMsgAsRead', requestOptions).then(response => response.json())
-  .then((r) => {
-    console.log(r)
+    fetch('http://localhost:5000/api/user/markMsgAsRead', requestOptions).then(response => response.json())
+    .then((r) => {
+      if (!r.ok){
+        alert("unable to mark this message as read due to an unknown error")
+      }
+    })
+
+    return function cleanup(){
+      let newList = []
+      let changed = false
+      for(const n of props.messages){
+        if(MsgType.sent === n.type){
+          continue
+        }
+        if (n.id === msg_id && n.type === MsgType.unread){
+          var m = n
+          m.type = MsgType.read
+
+          newList.push(m)
+          changed = true
+          continue
+        }
+        newList.push(n)
+      }
+      if (changed){
+        props.changeInbox(newList)
+      }
+    }
   })
 
   if (msg === null){
     return <h2 className="text-center font-oxy font-black text-lg md:text-3xl">Unexpected error, try again later</h2>
-
   }
-  console.log(msg)
   return(
     <div className="grid justify-items-center space-y-5 my-5 mx-3 sm:mx-12 md:mx-24 lg:mx-36 xl:mx-48 2xl:mx-60">
       <div className="text-center font-oxy font-black text-lg md:text-3xl">{msg.description}</div>
