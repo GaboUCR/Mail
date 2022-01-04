@@ -2,20 +2,38 @@ import {Link, useParams} from "react-router-dom";
 import {useState, useEffect} from "react"
 
 export function MessageTumbnail(props){
-
-  const [selected, setSelected] = useState("")
-
-  let read = ""
   const MsgType = {read:0, unread:1, sent:2}
 
-  if (props.msg_type === MsgType.read){
-    read = " bg-white"
+  let color = ""
+
+  const [selected, setSelected] = useState(false)
+  let read = props.msg_type === MsgType.read
+
+  useEffect(() => {
+    setSelected(props.bulkSelection)
+  }, [props.bulkSelection])
+
+  function handleCheckboxChange(e){
+    if (e.target.value === "true"){
+      setSelected(false)
+    }
+    else{
+      setSelected(true)
+    }
+  }
+
+  if (read && !selected){
+    color = " bg-white"
+  }
+
+  else if (selected){
+    color = " bg-blue-300"
   }
 
   return(
-    <div className={"flex overflow-hidden p-3 space-x-4"+read}>
+    <div className={"flex overflow-hidden p-3 space-x-4"+color}>
 
-      <input className="self-center w-1/30" type="checkbox"/>
+      <input onChange={handleCheckboxChange} value={selected} className="self-center w-1/30" type="checkbox" checked={selected}/>
 
       <Link className="w-29/30" to={"/msg/"+props.id}>
 

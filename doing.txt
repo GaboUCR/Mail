@@ -1,1 +1,1 @@
-
+delete selected messages
