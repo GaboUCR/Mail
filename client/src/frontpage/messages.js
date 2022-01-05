@@ -46,18 +46,18 @@ export function MessageTumbnail(props){
   }
 
   return(
-    <div className={"flex overflow-hidden p-3 space-x-4"+color}>
+    <div className={"flex w-screen border overflow-hidden rounded my-1 px-3 space-x-4"+color}>
 
-      <input onChange={handleCheckboxChange} value={selected} className="self-center w-1/30" type="checkbox" checked={selected}/>
+      <input onChange={handleCheckboxChange} value={selected} className="flex-none self-center w-1/30" type="checkbox" checked={selected}/>
 
-      <Link className="w-29/30" to={"/msg/"+props.id}>
+      <Link className="w-29/30 flex-none" to={"/msg/"+props.id}>
 
-        <div className="flex space-x-4 border rounded">
-          <div className="w-1/6">{props.name}</div>
+        <div className="flex space-x-4">
+          <div className="w-1/6 m-1 flex-none">{props.name}</div>
 
-          <div className="flex w-5/6">
-            <div className="truncate"><b>{props.description+" - "}</b>{props.body}</div>
-            <div className="px-1 text-right ">{props.date}</div>
+          <div className="flex w-5/6 flex-none">
+            <div className="truncate text-left w-5/6"><b>{props.description+" - "}</b>{props.body}</div>
+            <div className="px-3 text-left lg:text-center w-1/6">{props.date}</div>
           </div>
 
         </div>
@@ -135,13 +135,9 @@ export function Message(props){
 export function Messages(props){
 
   if (props.messages.length === 0){
-    return <h2 className="cursor-wait text-center">Loading</h2>
+    return <h2 className="cursor-wait text-center">Reload to check for new messages</h2>
   }
   else{
-    return (
-      <div className="grid">
-        {props.messages}
-      </div>
-    )
+    return (props.messages)
   }
 }
