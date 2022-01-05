@@ -1,6 +1,6 @@
 import Navbar from "./navbar"
 import {useState, useEffect, useContext} from "react"
-import {refresh, send} from "./images"
+import {refresh, send, garbageBin} from "./images"
 import {MsgCompose} from "../forms"
 import {MessageTumbnail, Messages, Message} from "./messages"
 import {
@@ -18,6 +18,10 @@ function MsgButtons(props){
     window.location.reload(false)
   }
 
+  function deleteMessages(){
+    props.handleDelete(Math.floor(Math.random() * 100000))
+  }
+
   function setBulk(e){
     if (e.target.value === "true"){
       props.setPressed(false)
@@ -33,6 +37,7 @@ function MsgButtons(props){
       <div className="flex p-3 space-x-5">
         <input onChange={setBulk} className="self-center h-4 w-4" type="checkbox" value={props.pressed} checked={props.pressed}/>
         <button onClick={refreshPage}> <img src={refresh} /> </button>
+        <button onClick={deleteMessages}> <img src={garbageBin} /> </button>
       </div>
 
       <div className="flex p-3 space-x-5">
@@ -42,7 +47,6 @@ function MsgButtons(props){
       </div>
 
     </div>
-
   )
 }
 
@@ -56,7 +60,7 @@ function User(){
 
 function Frontpage(){
   const [pressed, setPressed] = useState(false)
-  const [selectedMsg, setSelectedMsg] = useState([])
+  const [del, setDel] = useState(0)
   const [inbox, setInbox] = useState([])
   const [sent, setSent] = useState([])
   const MsgType = {read:0, unread:1, sent:2}
@@ -75,23 +79,24 @@ function Frontpage(){
     .then((r) => {
       setSent(r.messages)
     })
-  },[]);
+  },[del]);
 
   return(
     <Router>
       <div>
         <Navbar />
-        <MsgButtons pressed={pressed} setPressed={setPressed}/>
+        <MsgButtons handleDelete={setDel} pressed={pressed} setPressed={setPressed}/>
       </div>
 
       <Switch>
 
         <Route exact path= "/inbox">
-          <Messages messages={inbox.map(m => (<MessageTumbnail bulkSelection={pressed} key={m.id} msg_type={m.type} id={m.id} name={m.from} description={m.description} body={m.body} date={m.date}/>))}/>
+          <Messages messages={inbox.map( (m, index)=> (<MessageTumbnail del={del} bulkSelection={pressed} key={m.id} msg_type={m.type} id={m.id} name={m.from} description={m.description} body={m.body} date={m.date}/>))}/>
         </Route>
 
         <Route exact path= "/sent">
-          <Messages messages={sent.map(m => (<MessageTumbnail bulkSelection={pressed} key={m.id} msg_type={m.type} id={m.id} name={m.from} description={m.description} body={m.body} date={m.date}/>))}/>
+          <Messages messages={sent.map( (m, index) => {
+                                return <MessageTumbnail del={del} bulkSelection={pressed} key={m.id} msg_type={m.type} id={m.id} name={m.from} description={m.description} body={m.body} date={m.date}/>}  )}/>
         </Route>
 
         <Route exact path="/msg/:msg_id">
@@ -103,11 +108,11 @@ function Frontpage(){
         </Route>
 
         <Route exact path= "/compose/:defaultTo">
-          <MsgCompose isTo={true}/>
+          <MsgCompose update={setDel} isTo={true}/>
         </Route>
 
         <Route exact path= "/compose">
-          <MsgCompose isTo={false}/>
+          <MsgCompose update={setDel} isTo={false}/>
         </Route>
 
       </Switch>

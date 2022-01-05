@@ -1,10 +1,10 @@
 import {useState} from "react";
-import {useParams} from "react-router-dom";
+import {useParams, useHistory} from "react-router-dom";
 
 
 function MsgCompose(props){
   let defaultTo = useParams()
-  console.log(defaultTo)
+  let history = useHistory();
 
   if (!props.isTo){
     defaultTo = ""
@@ -12,12 +12,6 @@ function MsgCompose(props){
   const[to, setto] = useState(defaultTo.defaultTo)
   const[body, setbody] = useState("")
   const[description, setdescription] = useState("")
-
-  console.log(typeof defaultTo)
-  //
-  // if (props.isTo){
-  //   setto(defaultTo)
-  // }
 
   const MsgForm = {ok:0, user_not_found:1, unknown_error:2}
 
@@ -46,6 +40,8 @@ function MsgCompose(props){
       switch (data.error) {
         case MsgForm.ok:
           alert("Message sent");
+          history.push("/sent")
+          props.update(Math.floor(Math.random() * 100000))
           break;
 
         case MsgForm.user_not_found:

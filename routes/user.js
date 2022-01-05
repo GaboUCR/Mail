@@ -9,6 +9,7 @@ router.post("/LogIn", userHandlers.logIn)
 // router.get("/inbox", userHandlers.checkCookie, userHandlers.getSentMessages)
 // router.get("/sent", userHandlers.checkCookie, userHandlers.getSentMessages)
 // router.post("/markMsgAsRead", userHandlers.checkCookie, userHandlers.markMsgAsRead)
+// router.post("/deleteMessage", userHandlers.checkCookie, userHandlers.deleteMessage)
 
 function hack(req, res, next){
   // res.locals.id = "61ad8dc34a0e347f088541c1"
@@ -16,6 +17,7 @@ function hack(req, res, next){
   next()
 }
 
+router.post("/deleteMessage", hack, userHandlers.deleteMessage)
 router.post("/markMsgAsRead", hack, userHandlers.markMsgAsRead)
 router.post("/sendMessage", hack, userHandlers.sendMessage)
 router.get("/inbox", hack, userHandlers.getInbox)

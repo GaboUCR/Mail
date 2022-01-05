@@ -6,7 +6,8 @@ const msgSchema = Schema({
   from_id : mongoose.ObjectId,
   body : String,
   description : String,
-  date : String
+  date : String,
+  deleted : Boolean
 })
 
 module.exports = mongoose.model('Message', msgSchema)

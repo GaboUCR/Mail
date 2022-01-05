@@ -27,7 +27,7 @@ module.exports = {
       }
       tinbox.push({id:n.msg_id, type:n.msg_type})
     }
-    let messagesQuery = await models.Message.find({to_id:res.locals.id}).exec()
+    let messagesQuery = await models.Message.find({to_id:res.locals.id, deleted:false}).exec()
     let inbox = []
 
     for (const n in messagesQuery){
@@ -39,24 +39,23 @@ module.exports = {
         }
       }
     }
-    console.log(inbox)
     res.json({messages:inbox})
     res.end()
 
   },
   getSentMessages : async (req, res) => {
     const MsgType = {read:0, unread:1, sent:2}
-    let msgQuery = await models.Message.find({from_id:res.locals.id}).exec()
+    let msgQuery = await models.Message.find({from_id:res.locals.id, deleted:false}).exec()
     let from = await models.User.findById(res.locals.id, "email")
     let messages = []
 
-    for (const n in msgQuery){
 
+    for (const n in msgQuery){
       var to = await models.User.findById(msgQuery[n].to_id, "email").exec()
       messages.push({to:to.email, from:from.email, body:msgQuery[n].body, description:msgQuery[n].description,
                      date:msgQuery[n].date, id:msgQuery[n]._id.toString(), type:MsgType.sent})
     }
-    console.log(messages)
+
     res.json({messages:messages})
     res.end()
   },
@@ -71,7 +70,14 @@ module.exports = {
     res.end()
   },
 
-  markMsgAsRead: async(req, res) =>{
+  deleteMessage: async(req, res) => {
+
+    let msg = await models.Message.findByIdAndUpdate(req.body.msg_id, {deleted:true}).exec()
+    res.json({ok:true})
+    res.end()
+  },
+
+  markMsgAsRead: async(req, res) => {
     const MsgType = {read:0, unread:1, sent:2}
     let msgStatus = await models.User.update({id:res.locals.id, "messages.msg_id":req.body.msg_id}, {
       $set:{'messages.$.msg_type' : MsgType.read}
@@ -175,7 +181,7 @@ module.exports = {
       let date = (fullDate.getMonth()+1).toString()+"/"+fullDate.getDate().toString()+"/"+fullDate.getFullYear().toString()
 
       let msg = await models.Message.create({to_id:to_id, from_id:from_id, body:req.body.body,
-                                             description:req.body.description, date:date})
+                                             description:req.body.description, date:date, deleted:false})
 
       let to_msg_type = await models.User.updateOne({_id:to_id}, {$addToSet: {messages:
                                                     {msg_id:msg._id, msg_type:MsgType.unread}}}, {upsert:true})

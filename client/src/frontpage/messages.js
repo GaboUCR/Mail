@@ -13,6 +13,22 @@ export function MessageTumbnail(props){
     setSelected(props.bulkSelection)
   }, [props.bulkSelection])
 
+  useEffect(() => {
+    console.log(props.del)
+    if (selected){
+      const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({msg_id:props.id})};
+      fetch('http://localhost:5000/api/user/deleteMessage', requestOptions).then(response => response.json())
+      .then((data) => {
+        if (!data.ok){
+          alert("Unable to delete this message, try again later")
+        }
+      })
+    }
+  }, [props.del])
+
   function handleCheckboxChange(e){
     if (e.target.value === "true"){
       setSelected(false)
@@ -25,7 +41,6 @@ export function MessageTumbnail(props){
   if (read && !selected){
     color = " bg-white"
   }
-
   else if (selected){
     color = " bg-blue-300"
   }
