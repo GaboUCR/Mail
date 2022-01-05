@@ -49,18 +49,18 @@ export function MessageTumbnail(props){
   }
 
   return(
-    <div className={"flex w-screen border overflow-hidden rounded hover:border-red-200 px-3 space-x-4 hover:shadow-md"+color}>
+    <div className={"flex w-full items-center border rounded hover:border-red-200 px-3 hover:shadow-md"+color}>
 
-      <input onChange={handleCheckboxChange} value={selected} className="flex-none self-center w-1/30" type="checkbox" checked={selected}/>
+      <input onChange={handleCheckboxChange} value={selected} className="w-1/30" type="checkbox" checked={selected}/>
 
-      <Link className="w-29/30 flex-none" to={"/msg/"+props.id}>
+      <Link className="w-29/30" to={"/msg/"+props.id}>
 
-        <div className="flex space-x-4">
-          <div className="w-1/6 m-1 flex-none">{props.name}</div>
+        <div className="flex">
+          <div className="w-1/6 my-1">{props.name}</div>
 
-          <div className="flex w-5/6 flex-none">
-            <div className="truncate text-left w-5/6"><b>{props.description+" - "}</b>{props.body}</div>
-            <div className="px-3 text-left lg:text-center w-1/6">{props.date}</div>
+          <div className="flex my-1 w-5/6">
+            <div className="truncate w-11/12"><b>{props.description+" - "}</b>{props.body}</div>
+            <div className="text-right w-1/12">{props.date}</div>
           </div>
 
         </div>
