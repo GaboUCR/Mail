@@ -39,14 +39,17 @@ export function MessageTumbnail(props){
   }
 
   if (read && !selected){
-    color = " bg-white"
+    color = " bg-light-brown"
   }
   else if (selected){
     color = " bg-blue-300"
   }
+  else if(props.msg_type === MsgType.sent){
+    color = " bg-light-brown"
+  }
 
   return(
-    <div className={"flex w-screen border overflow-hidden rounded my-1 px-3 space-x-4"+color}>
+    <div className={"flex w-screen border overflow-hidden rounded hover:border-red-200 px-3 space-x-4 hover:shadow-md"+color}>
 
       <input onChange={handleCheckboxChange} value={selected} className="flex-none self-center w-1/30" type="checkbox" checked={selected}/>
 

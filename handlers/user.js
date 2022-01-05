@@ -39,7 +39,14 @@ module.exports = {
         }
       }
     }
-    res.json({messages:inbox})
+    //revert the order of the list so that new messages appear at the top
+    //definitely there is a fancier way to do this
+    let rMessages = []
+    for (const n of inbox){
+      rMessages.unshift(n)
+    }
+
+    res.json({messages:rMessages})
     res.end()
 
   },
@@ -55,8 +62,14 @@ module.exports = {
       messages.push({to:to.email, from:from.email, body:msgQuery[n].body, description:msgQuery[n].description,
                      date:msgQuery[n].date, id:msgQuery[n]._id.toString(), type:MsgType.sent})
     }
+    //revert the order of the list so that new messages appear at the top
+    //definitely there is a fancier way to do this
+    let rMessages = []
+    for (const n of messages){
+      rMessages.unshift(n)
+    }
 
-    res.json({messages:messages})
+    res.json({messages:rMessages})
     res.end()
   },
 

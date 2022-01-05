@@ -48,11 +48,8 @@ function SearchBar(){
       setUsers(r.emails.map( c=> (<div><Link to ={"/user/"+c}>{c}</Link></div>)))
       console.log(users)
     }
-
   )
-
 }
-
   async function handleFocusOut(){
     //this promise mades the code wait so that the Link component exists when the user click on it!
     await new Promise(r => setTimeout(r, 200));
@@ -65,7 +62,7 @@ function SearchBar(){
 
   return (
     <div className="p-2">
-      <input onChange={handleSearch} onFocus={handleFocusIn} onBlur={handleFocusOut} type="text" className="border text-lg px-2 h-10 w-72" id="searchBar" placeholder="Find the people you know" value={search} />
+      <input onChange={handleSearch} onFocus={handleFocusIn} onBlur={handleFocusOut} type="text" className="border bg-light-brown text-lg px-2 h-10 w-72" id="searchBar" placeholder="Find the people you know" value={search} />
       <div className={"w-72 absolute"+display}>{users}</div>
     </div>
   )

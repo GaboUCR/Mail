@@ -55,20 +55,17 @@ function MsgCompose(props){
 
   return(
     <div className="grid justify-items-center">
-      <div className = "my-10">
+      <div className = "">
         <form onSubmit={handleSubmit} className = "space-y-4 m-6">
 
-        <label className ="font-oxy font-normal text-lg" htmlFor="to">to</label>
           <div>
             <input type="text" className="border w-72" id="to" placeholder="to" value={to} onChange={toChange} />
           </div>
 
-        <label htmlFor="description">Subject</label>
           <div>
-            <input type="text" className="border w-72" id="description" value={description} onChange={descriptionChange}/>
+            <input type="text" className="border w-72" id="description" placeholder="Subject" value={description} onChange={descriptionChange}/>
           </div>
 
-        <label className ="font-oxy font-normal text-lg" htmlFor="body">body</label>
           <div>
             <textarea className="border h-80 w-72" id="body" value={body} onChange={bodyChange}> </textarea>
           </div>
