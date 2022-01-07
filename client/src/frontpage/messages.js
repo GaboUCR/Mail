@@ -14,7 +14,6 @@ export function MessageTumbnail(props){
   }, [props.bulkSelection])
 
   useEffect(() => {
-    console.log(props.del)
     if (selected){
       const requestOptions = {
       method: 'POST',
@@ -56,9 +55,9 @@ export function MessageTumbnail(props){
       <Link className="w-29/30" to={"/msg/"+props.id}>
 
         <div className="flex">
-          <div className="w-1/6 my-1">{props.name}</div>
+          <div className="w-1/6 py-1">{props.name}</div>
 
-          <div className="flex my-1 w-5/6">
+          <div className="flex py-1 w-5/6">
             <div className="truncate w-11/12"><b>{props.description+" - "}</b>{props.body}</div>
             <div className="text-right w-1/12">{props.date}</div>
           </div>
@@ -126,11 +125,11 @@ export function Message(props){
     return <h2 className="text-center font-oxy font-black text-lg md:text-3xl">Unexpected error, try again later</h2>
   }
   return(
-    <div className="grid justify-items-center space-y-5 my-5 mx-3 sm:mx-12 md:mx-24 lg:mx-36 xl:mx-48 2xl:mx-60">
-      <div className="text-center font-oxy font-black text-lg md:text-3xl">{msg.description}</div>
-      <div className="text-center font-oxy font-normal text-sm">{msg.from}</div>
-      <div className="text-center font-oxy font-normal text-sm">to {msg.to}</div>
-      <div className="border rounded border-bor-comm p-2 font-lato text-xs lit:text-sm litx:text-base sm:text-lg" >{msg.body}</div>
+    <div className="grid justify-items-start my-5 mx-3 sm:mx-12 md:mx-24 lg:mx-36 xl:mx-48 2xl:mx-60">
+      <div className="text-lg px-2 bg-light-brown py-5 border w-full font-thin md:text-3xl">{msg.description}</div>
+      <div className="font-semibold px-2 border w-full text-base">{msg.from}</div>
+      <div className="font-semibold px-2 border w-full text-base">to {msg.to}</div>
+      <div className="text-xs px-2 lit:text-sm py-4 border w-full litx:text-base sm:text-lg" >{msg.body}</div>
     </div>
   )
 }

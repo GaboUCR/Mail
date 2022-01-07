@@ -36,7 +36,6 @@ function MsgCompose(props){
 
     fetch('http://localhost:5000/api/user/sendMessage', requestOptions).then(response => response.json())
     .then((data) => {
-      console.log(data)
       switch (data.error) {
         case MsgForm.ok:
           alert("Message sent");

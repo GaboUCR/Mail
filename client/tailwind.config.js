@@ -8,7 +8,7 @@ module.exports = {
         "29/30":"96.6666%",
       },
       colors:{
-        "light-blue":"#B7FAF5",
+        "light-blue":"#C1F3F2",
         "light-brown":"#FCF3F1"
       },
       fontSize:{

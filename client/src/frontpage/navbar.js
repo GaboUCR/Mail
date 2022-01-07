@@ -1,10 +1,11 @@
 import {useEffect, useState, useContext} from "react";
 import {EmailContext} from "../email.context"
-import {loupe} from "./images"
-import {Link} from "react-router-dom"
+import {loupe, user} from "./images"
+import {Link, useHistory} from "react-router-dom"
 
 function Navbar(){
   const {email, handleEmailChange} = useContext(EmailContext)
+  const [show, setIsShown] = useState(" hidden")
 
   let handleLogout = () =>{
     fetch("http://localhost:5000/api/user/logout", {method:"GET"})
@@ -13,17 +14,25 @@ function Navbar(){
   }
 
   return(
-    <nav id="welcome" className = "text-xl grid grid-cols-3 grid-rows-1 bg-top-nav">
-      <div className ="p-4">
+    <nav id="welcome" className = "text-xl p-4 grid grid-cols-3 grid-rows-1 bg-top-nav">
+      <div className ="">
         <a href = "/">Mail</a>
       </div>
 
       <SearchBar />
 
-      <nav className="flex place-content-end">
+      <nav className="place-self-end" onMouseEnter={() => setIsShown("")}
+      onMouseLeave={() => setIsShown(" hidden")}>
 
-        <a className="p-4 inline">{email}</a>
-        <button onClick={handleLogout} className="p-4 inline">log out</button>
+        <button className="px-6" >
+          <img src={user}/>
+
+        </button>
+
+        <div className={"absolute border rounded-lg bg-white"+show}>
+          <button onClick={handleLogout} className="px-2">Log out</button>
+        </div>
+
       </nav>
     </nav>
   )
@@ -33,10 +42,16 @@ function SearchBar(){
   const [search, setSearch] = useState("")
   const [users, setUsers] = useState([])
   const [display, setDisplay] = useState(" hidden")
+  let history = useHistory()
+
+  function look(src){
+    console.log(src)
+    history.push(src)
+    setDisplay(" hidden")
+  }
 
   function handleSearch (event){
     setSearch(event.target.value)
-    setDisplay("")
     const requestOptions = {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -44,15 +59,14 @@ function SearchBar(){
 
     fetch("http://localhost:5000/api/user/get-users", requestOptions).then(response => response.json())
     .then((r) => {
-      console.log(r.emails)
-      setUsers(r.emails.map( c=> (<div><Link to ={"/user/"+c}>{c}</Link></div>)))
-      console.log(users)
+      setUsers(r.emails.map(c => (<Link className="w-full p-1 hover:bg-light-brown" to ={"/user/"+c}><div className="">{c}</div></Link>)))
     }
   )
 }
   async function handleFocusOut(){
     //this promise mades the code wait so that the Link component exists when the user click on it!
-    await new Promise(r => setTimeout(r, 200));
+    //it's unprofessional and a quick fix
+    await new Promise(resolver => setTimeout(resolver, 220))
     setDisplay(" hidden")
   }
 
@@ -61,9 +75,9 @@ function SearchBar(){
   }
 
   return (
-    <div className="p-2">
-      <input onChange={handleSearch} onFocus={handleFocusIn} onBlur={handleFocusOut} type="text" className="border bg-light-brown text-lg px-2 h-10 w-72" id="searchBar" placeholder="Find the people you know" value={search} />
-      <div className={"w-72 absolute"+display}>{users}</div>
+    <div onFocus={handleFocusIn} onBlur={handleFocusOut} className="">
+      <input onChange={handleSearch} type="text" className="border bg-light-brown text-lg px-2 h-10 w-80" id="searchBar" placeholder="Find the people you know" value={search} />
+      <div className={"grid w-80 border rounded-lg bg-white absolute"+display}>{users}</div>
     </div>
   )
 }
