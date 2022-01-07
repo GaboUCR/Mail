@@ -19,33 +19,28 @@ function App() {
       if (data.logged){
         handleEmailChange(data.email)
       }
-
-
-
-      //This has to be changed !!!!
-      // else{
-      //   handleEmailChange("")
-      // }
+      else{
+        handleEmailChange("")
+      }
     })
   },[email]);
 
   if (email === ""){
     return (
       <Router>
-          <Switch>
+        <Switch>
 
-            <Redirect exact from="/" to="/logIn" />
+          <Route exact path= "/signUp">
+            <SignUp/>
+          </Route>
 
-              <Route path= "/signUp">
-                <SignUp/>
-              </Route>
+          <Route exact path= "/logIn">
+            <LogIn />
+          </Route>
 
-              <Route path= "/logIn">
-                <LogIn />
-              </Route>
+          <Redirect from="/" to="/logIn" />
 
-          </Switch>
-
+        </Switch>
       </Router>
     )
   }

@@ -86,39 +86,40 @@ export function Message(props){
   let msg = getMessageById(props.messages, msg_id)
 
   useEffect(() => {
-    const requestOptions = {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({msg_id:msg_id})};
+    if (msg.type === MsgType.unread) {
+      const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({msg_id:msg_id})};
 
-    fetch('http://localhost:5000/api/user/markMsgAsRead', requestOptions).then(response => response.json())
-    .then((r) => {
-      if (!r.ok){
-        alert("unable to mark this message as read due to an unknown error")
-      }
-    })
-
-    return function cleanup(){
-      let newList = []
-      let changed = false
-      for(const n of props.messages){
-        if(MsgType.sent === n.type){
-          continue
+      fetch('http://localhost:5000/api/user/markMsgAsRead', requestOptions).then(response => response.json())
+      .then((r) => {
+        if (!r.ok){
+          alert("unable to mark this message as read due to an unknown error")
         }
-        if (n.id === msg_id && n.type === MsgType.unread){
-          var m = n
-          m.type = MsgType.read
+      })
 
-          newList.push(m)
-          changed = true
-          continue
+      return function cleanup(){
+        let newList = []
+        let changed = false
+        for(const n of props.messages){
+          if(MsgType.sent === n.type){
+            continue
+          }
+          if (n.id === msg_id && n.type === MsgType.unread){
+            var m = n
+            m.type = MsgType.read
+
+            newList.push(m)
+            changed = true
+            continue
+          }
+          newList.push(n)
         }
-        newList.push(n)
-      }
-      if (changed){
-        props.changeInbox(newList)
-      }
-    }
+        if (changed){
+          props.changeInbox(newList)
+        }
+    }}
   })
 
   if (msg === null){

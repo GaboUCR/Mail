@@ -1,6 +1,6 @@
 import Navbar from "./navbar"
 import {useState, useEffect, useContext} from "react"
-import {refresh, send, garbageBin} from "./images"
+import {refresh, send, garbageBin, user, bigUser} from "./images"
 import {MsgCompose} from "../forms"
 import {MessageTumbnail, Messages, Message} from "./messages"
 import {
@@ -54,7 +54,17 @@ function User(){
   let {email} = useParams()
 
   return(
-    <div className="text-center font-bold text-lg"><Link to={"/compose/"+email}>{email} <p className="rounded border inline text-sm font-medium">Start a conversation</p></Link></div>
+    <Link to={"/compose/"+email}>
+      <div className="grid justify-content-center">
+
+        <div className="flex place-content-center">
+          <img className="float-left" src={bigUser}/>
+          <div className="font-bold mx-5 text-lg">{email}</div>
+        </div>
+
+        <button className="rounded place-self-center my-2 px-2 border text-lg font-medium">Start a conversation</button>
+      </div>
+    </Link>
   )
 }
 
@@ -114,6 +124,8 @@ function Frontpage(){
         <Route exact path= "/compose">
           <MsgCompose update={setDel} isTo={false}/>
         </Route>
+
+        <Redirect from="/" to="/inbox" />
 
       </Switch>
     </Router>

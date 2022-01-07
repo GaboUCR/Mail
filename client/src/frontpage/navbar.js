@@ -6,15 +6,16 @@ import {Link, useHistory} from "react-router-dom"
 function Navbar(){
   const {email, handleEmailChange} = useContext(EmailContext)
   const [show, setIsShown] = useState(" hidden")
+  let history = useHistory()
 
   let handleLogout = () =>{
     fetch("http://localhost:5000/api/user/logout", {method:"GET"})
+    history.push("/")
     handleEmailChange("")
-    console.log(email)
   }
 
   return(
-    <nav id="welcome" className = "text-xl p-4 grid grid-cols-3 grid-rows-1 bg-top-nav">
+    <nav id="welcome" className = "text-xl p-4 grid grid-cols-3 grid-rows-1 items-center">
       <div className ="">
         <a href = "/">Mail</a>
       </div>
@@ -24,9 +25,8 @@ function Navbar(){
       <nav className="place-self-end" onMouseEnter={() => setIsShown("")}
       onMouseLeave={() => setIsShown(" hidden")}>
 
-        <button className="px-6" >
+        <button className="px-6 py-2" >
           <img src={user}/>
-
         </button>
 
         <div className={"absolute border rounded-lg bg-white"+show}>

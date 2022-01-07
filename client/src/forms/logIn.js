@@ -59,9 +59,11 @@ function LogIn (){
 
           <input className="w-72 h-10 bg-light-brown" type="submit" value="Log In"/>
 
-          <div className="grid w-72 h-10">
-            <Link className="place-self-center" to="/signUp">Create new account</Link>
-          </div>
+          <Link className="w-72 h-10" to="/signUp">
+            <div className="text-center p-5">
+              Create new account
+            </div>
+          </Link>
         </form>
 
       </div>
