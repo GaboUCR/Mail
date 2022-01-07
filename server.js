@@ -3,9 +3,6 @@ const app = express()
 const port = 5000
 const path = require('path')
 
-var cors = require('cors')
-app.use(cors())
-
 const cookieParser = require('cookie-parser')
 app.use(cookieParser())
 
