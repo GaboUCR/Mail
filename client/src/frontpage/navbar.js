@@ -9,7 +9,7 @@ function Navbar(){
   let history = useHistory()
 
   let handleLogout = () =>{
-    fetch("http://localhost:5000/api/user/logout", {method:"GET"})
+    fetch("/mail/api/user/logout", {method:"GET"})
     history.push("/")
     handleEmailChange("")
   }
@@ -57,7 +57,7 @@ function SearchBar(){
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({search:search})};
 
-    fetch("http://localhost:5000/api/user/get-users", requestOptions).then(response => response.json())
+    fetch("/mail/api/user/get-users", requestOptions).then(response => response.json())
     .then((r) => {
       setUsers(r.emails.map(c => (<Link className="w-full p-1 hover:bg-light-brown" to ={"/user/"+c}><div className="">{c}</div></Link>)))
     }

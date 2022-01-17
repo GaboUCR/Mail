@@ -34,7 +34,7 @@ function MsgCompose(props){
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({to:to, body:body, description:description})};
 
-    fetch('http://localhost:5000/api/user/sendMessage', requestOptions).then(response => response.json())
+    fetch('/mail/api/user/sendMessage', requestOptions).then(response => response.json())
     .then((data) => {
       switch (data.error) {
         case MsgForm.ok:

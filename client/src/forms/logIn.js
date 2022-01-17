@@ -25,7 +25,7 @@ function LogIn (){
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({email:emailForm, password:password})};
 
-    fetch('http://localhost:5000/api/user/logIn', requestOptions).then(response => response.json())
+    fetch('/mail/api/user/logIn', requestOptions).then(response => response.json())
     .then((data) => {
       console.log(data)
       switch (data.error) {

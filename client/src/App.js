@@ -14,7 +14,7 @@ function App() {
   const {email, handleEmailChange} = useContext(EmailContext)
 
   useEffect( () => {
-    fetch('http://localhost:5000/api/user/check', {method:"GET"}).then(response => response.json())
+    fetch('/mail/api/user/check', {method:"GET"}).then(response => response.json())
     .then((data) => {
       if (data.logged){
         handleEmailChange(data.email)
@@ -27,7 +27,7 @@ function App() {
 
   if (email === ""){
     return (
-      <Router>
+      <Router basename="/mail">
         <Switch>
 
           <Route exact path= "/signUp">

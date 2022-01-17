@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 5000
 const path = require('path')
+var fs = require("fs")
 
 const cookieParser = require('cookie-parser')
 app.use(cookieParser())
@@ -19,11 +20,28 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 const routes = require('./routes')
-app.use('/api', routes)
+app.use('/mail/api', routes)
 
 app.use(express.static(path.join(__dirname, 'client/build/')))
-app.get('*', (request, response) => {
+
+app.get('/mail', (request, response) => {
   response.sendFile(path.join(__dirname, 'client/build/index.html'))
+})
+
+app.get('/mail*', (request, response) => {
+  response.sendFile(path.join(__dirname, 'client/build/index.html'))
+})
+
+app.use(function errorHandler (err, req, res, next) {
+  let fullDate = new Date(Date.now())
+  let date = (fullDate.getMonth()+1).toString()+"/"+fullDate.getDate().toString()+"/"+fullDate.getFullYear().toString()+"\n"
+
+  fs.appendFile('log.txt', date + err.stack+"\n"+"\n", function (err) {
+    if (err) throw err;
+    }
+  )
+
+  res.end()
 })
 
 app.listen(port, () => {

@@ -19,7 +19,7 @@ export function MessageTumbnail(props){
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({msg_id:props.id})};
-      fetch('http://localhost:5000/api/user/deleteMessage', requestOptions).then(response => response.json())
+      fetch('/mail/api/user/deleteMessage', requestOptions).then(response => response.json())
       .then((data) => {
         if (!data.ok){
           alert("Unable to delete this message, try again later")
@@ -92,7 +92,7 @@ export function Message(props){
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({msg_id:msg_id})};
 
-      fetch('http://localhost:5000/api/user/markMsgAsRead', requestOptions).then(response => response.json())
+      fetch('/mail/api/user/markMsgAsRead', requestOptions).then(response => response.json())
       .then((r) => {
         if (!r.ok){
           alert("unable to mark this message as read due to an unknown error")

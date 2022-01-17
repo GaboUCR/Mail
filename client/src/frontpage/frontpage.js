@@ -78,21 +78,21 @@ function Frontpage(){
   useEffect(()=>{
     const requestOptions = {method: 'GET'};
 
-    fetch('http://localhost:5000/api/user/inbox', requestOptions).then(response => response.json())
+    fetch('/mail/api/user/inbox', requestOptions).then(response => response.json())
     .then((r) => {
       setInbox(r.messages)
     },
     (error) =>{console.log(error)}
     )
 
-    fetch('http://localhost:5000/api/user/sent', requestOptions).then(response => response.json())
+    fetch('/mail/api/user/sent', requestOptions).then(response => response.json())
     .then((r) => {
       setSent(r.messages)
     })
   },[del]);
 
   return(
-    <Router>
+    <Router basename="/mail">
       <div>
         <Navbar />
         <MsgButtons handleDelete={setDel} pressed={pressed} setPressed={setPressed}/>
