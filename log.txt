@@ -3,3 +3,6 @@ undefined
 1/16/2022
 undefined
 
+2/10/2022
+Error: ENOENT: no such file or directory, stat 'C:\Users\gabog\OneDrive - Estudiantes ITCR\Projects\Mail\client\build\index.html'
+
