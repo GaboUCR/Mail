@@ -17,7 +17,7 @@ mongoose.Promise = global.Promise
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 const routes = require('./routes')
 app.use('/mail/api', routes)
@@ -32,13 +32,13 @@ app.get('/mail*', (request, response) => {
   response.sendFile(path.join(__dirname, 'client/build/index.html'))
 })
 
-app.use(function errorHandler (err, req, res, next) {
+app.use(function errorHandler(err, req, res, next) {
   let fullDate = new Date(Date.now())
-  let date = (fullDate.getMonth()+1).toString()+"/"+fullDate.getDate().toString()+"/"+fullDate.getFullYear().toString()+"\n"
+  let date = (fullDate.getMonth() + 1).toString() + "/" + fullDate.getDate().toString() + "/" + fullDate.getFullYear().toString() + "\n"
 
-  fs.appendFile('log.txt', date + err.stack+"\n"+"\n", function (err) {
+  fs.appendFile('log.txt', date + err.stack + "\n" + "\n", function (err) {
     if (err) throw err;
-    }
+  }
   )
 
   res.end()
