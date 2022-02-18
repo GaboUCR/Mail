@@ -2,9 +2,9 @@
   "name": "mail",
   "version": "1.0.0",
   "description": "Productivity app",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "dev_server": "nodemon server.js",
+    "dev_server": "nodemon index.js",
     "dev_client": "cd client && npm start",
     "dev": "concurrently \"npm run dev_server\" \"npm run dev_client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
