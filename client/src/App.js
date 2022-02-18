@@ -1,6 +1,6 @@
-import {SignUp, MsgCompose, LogIn} from "./forms"
-import {useEffect, useState, useContext} from "react"
-import {EmailContext, EmailProvider} from "./email.context"
+import { SignUp, MsgCompose, LogIn } from "./forms"
+import { useEffect, useState, useContext } from "react"
+import { EmailContext, EmailProvider } from "./email.context"
 import Frontpage from "./frontpage"
 import {
   BrowserRouter as Router,
@@ -11,30 +11,31 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const {email, handleEmailChange} = useContext(EmailContext)
+  const { email, handleEmailChange } = useContext(EmailContext)
 
-  useEffect( () => {
-    fetch('/mail/api/user/check', {method:"GET"}).then(response => response.json())
-    .then((data) => {
-      if (data.logged){
-        handleEmailChange(data.email)
-      }
-      else{
-        handleEmailChange("")
-      }
-    })
-  },[email]);
+  //Check if the client is authenticated
+  useEffect(() => {
+    fetch('/mail/api/user/check', { method: "GET" }).then(response => response.json())
+      .then((data) => {
+        if (data.logged) {
+          handleEmailChange(data.email)
+        }
+        else {
+          handleEmailChange("")
+        }
+      })
+  }, [email]);
 
-  if (email === ""){
+  if (email === "") {
     return (
       <Router basename="/mail">
         <Switch>
 
-          <Route exact path= "/signUp">
-            <SignUp/>
+          <Route exact path="/signUp">
+            <SignUp />
           </Route>
 
-          <Route exact path= "/logIn">
+          <Route exact path="/logIn">
             <LogIn />
           </Route>
 
@@ -44,11 +45,11 @@ function App() {
       </Router>
     )
   }
-  else{
+  else {
     return (
-            <Frontpage />
-       )
-    }
+      <Frontpage />
+    )
+  }
 }
 
 export default App;
