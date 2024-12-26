@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-client-handler
+  labels:
+    app: nginx-client-handler
+spec:
+  selector:
+    app: nginx-client-handler  # Debe coincidir con las etiquetas del Deployment
+  ports:
+    - protocol: TCP
+      port: 80                # Puerto del servicio (el estándar para HTTP)
+      targetPort: 80          # Puerto en los pods (donde Nginx escucha)
+      nodePort: 30001         # Puerto accesible en el nodo
+  type: NodePort              # Expone el servicio como NodePort
