@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-client-handler
+  labels:
+    app: nginx-client-handler
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-client-handler
+  template:
+    metadata:
+      labels:
+        app: nginx-client-handler
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine  # Imagen base de Nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: react-build-pv
+          mountPath: /usr/share/nginx/html  # Donde Nginx busca los archivos estáticos
+      volumes:
+      - name: react-build-pv
+        hostPath:
+          path: /run/desktop/mnt/host/c/Users/gabog/export/react-build
+          type: Directory
