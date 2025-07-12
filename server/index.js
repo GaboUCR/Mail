@@ -30,17 +30,10 @@ app.get('/mail*', (request, response) => {
   response.sendFile(path.join(__dirname, 'client/build/index.html'))
 })
 
-app.use(function errorHandler(err, req, res, next) {
-  const now = new Date()
-  const formattedDate = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}\n`
-
-  // Append error details to the log file (non-blocking)
-  fs.appendFile('log.txt', formattedDate + err.stack + "\n\n", function (writeErr) {
-    if (writeErr) throw writeErr;
-  })
-
-  res.end()
-})
+app.use((err, req, res, next) => {
+  logger.crit('💥 Error no manejado en el servidor', { stack: err.stack });
+  res.status(500).end();
+});
 
 async function startServer() {
   try {
