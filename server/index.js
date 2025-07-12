@@ -36,6 +36,7 @@ app.use(function errorHandler(err, req, res, next) {
   let fullDate = new Date(Date.now())
   let date = (fullDate.getMonth() + 1).toString() + "/" + fullDate.getDate().toString() + "/" + fullDate.getFullYear().toString() + "\n"
 
+  // Blocks main thread
   fs.appendFile('log.txt', date + err.stack + "\n" + "\n", function (err) {
     if (err) throw err;
   }

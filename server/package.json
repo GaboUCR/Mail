@@ -1,12 +1,10 @@
 {
   "name": "mail",
   "version": "1.0.0",
-  "description": "Productivity app",
+  "description": "mail app",
   "main": "index.js",
   "scripts": {
-    "dev_server": "nodemon index.js",
-    "dev_client": "cd client && npm start",
-    "dev": "concurrently \"npm run dev_server\" \"npm run dev_client\"",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Gabriel Gamboa",
