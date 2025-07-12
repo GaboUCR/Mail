@@ -1,8 +1,6 @@
 const models = require('../models')
 
 module.exports = {
-  //I made the rookie mistake of building this database like an SQL database
-  //That's why this code looks so weird
   getInbox : async (req, res, next) => {
     try{
       const MsgType = {read:0, unread:1, sent:2}
