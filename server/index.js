@@ -1,19 +1,17 @@
 const express = require('express')
 const app = express()
-const port = 5000
+const PORT = 5000
 const path = require('path')
 var fs = require("fs")
+
+const logger = require('./logger.js');
+const { connectWithRetry } = require('./db.js');
 
 const cookieParser = require('cookie-parser')
 app.use(cookieParser())
 
-//Users array will hold objects with the user id and the encrypted cookie for that user
+// Users array will hold objects with the user id and the encrypted cookie for that user
 app.locals.users = []
-
-const mongoose = require('mongoose')
-const dbUrl = 'mongodb://localhost:27017/Mail'
-const db = mongoose.connect(dbUrl)
-mongoose.Promise = global.Promise
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
@@ -33,18 +31,29 @@ app.get('/mail*', (request, response) => {
 })
 
 app.use(function errorHandler(err, req, res, next) {
-  let fullDate = new Date(Date.now())
-  let date = (fullDate.getMonth() + 1).toString() + "/" + fullDate.getDate().toString() + "/" + fullDate.getFullYear().toString() + "\n"
+  const now = new Date()
+  const formattedDate = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}\n`
 
-  // Blocks main thread
-  fs.appendFile('log.txt', date + err.stack + "\n" + "\n", function (err) {
-    if (err) throw err;
-  }
-  )
+  // Append error details to the log file (non-blocking)
+  fs.appendFile('log.txt', formattedDate + err.stack + "\n\n", function (writeErr) {
+    if (writeErr) throw writeErr;
+  })
 
   res.end()
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+async function startServer() {
+  try {
+    // Here you can use await because we're inside an async function
+    await connectWithRetry();
+    app.listen(PORT, () => {
+      logger.info(`🚀 Server running at http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    logger.crit('Could not start server due to missing database connection', { error: err.message });
+    process.exit(1);
+  }
+}
+
+// We call the function without top-level await
+startServer();
