@@ -1,4 +1,5 @@
 import { useState } from "react";
+import RichEditor from "../components/RichEditor";
 import { useParams, useHistory } from "react-router-dom";
 
 function MsgCompose(props) {
@@ -9,7 +10,7 @@ function MsgCompose(props) {
     defaultTo = ""
   }
   const [to, setto] = useState(defaultTo.defaultTo)
-  const [body, setbody] = useState("")
+  const [body, setbody] = useState("<p></p>")
   const [description, setdescription] = useState("")
 
   const MsgForm = { ok: 0, user_not_found: 1, unknown_error: 2 }
@@ -22,8 +23,8 @@ function MsgCompose(props) {
     setto(event.target.value);
   }
 
-  function bodyChange(event) {
-    setbody(event.target.value);
+  function bodyChange(html) {
+    setbody(html);
   }
 
   function handleSubmit(event) {
@@ -60,7 +61,7 @@ function MsgCompose(props) {
 
       <input type="text" className="border p-2 w-full" id="description" placeholder="Subject" value={description} onChange={descriptionChange} />
 
-      <textarea className="border p-2 h-72 w-full" id="body" value={body} onChange={bodyChange}> </textarea>
+      <RichEditor value={body} onChange={bodyChange} />
 
       <input className="bg-light-brown p-3" type="submit" value="Send Message" />
     </form>
