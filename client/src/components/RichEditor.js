@@ -1,12 +1,12 @@
-import React from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit   from '@tiptap/starter-kit';
-import Underline    from '@tiptap/extension-underline';
-import Link         from '@tiptap/extension-link';
-import Image        from '@tiptap/extension-image';
-import TextAlign    from '@tiptap/extension-text-align';
+import React from 'react'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import Underline from '@tiptap/extension-underline'
+import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
+import TextAlign from '@tiptap/extension-text-align'
 
-import Toolbar from './Toolbar';
+import MenuBar from './MenuBar'
 
 export default function RichEditor({ value, onChange }) {
   const editor = useEditor({
@@ -19,17 +19,17 @@ export default function RichEditor({ value, onChange }) {
     ],
     content: value,
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
-  });
+  })
 
-  if (!editor) return null;
+  if (!editor) return null
 
   return (
     <div className="border rounded-lg overflow-hidden">
-      <Toolbar editor={editor} />
+      <MenuBar editor={editor} />
       <EditorContent
         editor={editor}
         className="p-3 prose max-w-none focus:outline-none"
       />
     </div>
-  );
+  )
 }

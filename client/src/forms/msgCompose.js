@@ -1,71 +1,89 @@
-import { useState } from "react";
-import RichEditor from "../components/RichEditor";
-import { useParams, useHistory } from "react-router-dom";
+import { useState } from 'react'
+import RichEditor from '../components/RichEditor'
+import { useParams, useHistory } from 'react-router-dom'
 
 function MsgCompose(props) {
   let defaultTo = useParams()
-  let history = useHistory();
+  let history = useHistory()
 
   if (!props.isTo) {
-    defaultTo = ""
+    defaultTo = ''
   }
   const [to, setto] = useState(defaultTo.defaultTo)
-  const [body, setbody] = useState("<p></p>")
-  const [description, setdescription] = useState("")
+  const [body, setbody] = useState('<p></p>')
+  const [description, setdescription] = useState('')
 
   const MsgForm = { ok: 0, user_not_found: 1, unknown_error: 2 }
 
   function descriptionChange(event) {
-    setdescription(event.target.value);
+    setdescription(event.target.value)
   }
 
   function toChange(event) {
-    setto(event.target.value);
+    setto(event.target.value)
   }
 
   function bodyChange(html) {
-    setbody(html);
+    setbody(html)
   }
 
   function handleSubmit(event) {
-    event.preventDefault();
+    event.preventDefault()
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ to: to, body: body, description: description })
-    };
+      body: JSON.stringify({ to, body, description }),
+    }
 
-    fetch('/mail/api/user/sendMessage', requestOptions).then(response => response.json())
-      .then((data) => {
+    fetch('/mail/api/user/sendMessage', requestOptions)
+      .then(response => response.json())
+      .then(data => {
         switch (data.error) {
           case MsgForm.ok:
-            alert("Message sent");
-            history.push("/sent")
+            alert('Message sent')
+            history.push('/sent')
             props.update(Math.floor(Math.random() * 100000))
-            break;
+            break
 
           case MsgForm.user_not_found:
-            alert("user " + to + " not found")
-            break;
+            alert('user ' + to + ' not found')
+            break
 
           default:
-            alert("Unknown error, try again later")
+            alert('Unknown error, try again later')
         }
-      });
-  };
+      })
+  }
 
   return (
     <form onSubmit={handleSubmit} className="p-3 space-y-1">
+      <input
+        type="text"
+        className="border p-2 w-full"
+        id="to"
+        placeholder="to"
+        value={to}
+        onChange={toChange}
+      />
 
-      <input type="text" className="border p-2 w-full" id="to" placeholder="to" value={to} onChange={toChange} />
-
-      <input type="text" className="border p-2 w-full" id="description" placeholder="Subject" value={description} onChange={descriptionChange} />
+      <input
+        type="text"
+        className="border p-2 w-full"
+        id="description"
+        placeholder="Subject"
+        value={description}
+        onChange={descriptionChange}
+      />
 
       <RichEditor value={body} onChange={bodyChange} />
 
-      <input className="bg-light-brown p-3" type="submit" value="Send Message" />
+      <input
+        className="bg-light-brown p-3"
+        type="submit"
+        value="Send Message"
+      />
     </form>
   )
 }
 
-export default MsgCompose;
+export default MsgCompose
